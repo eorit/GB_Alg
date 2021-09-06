@@ -1,15 +1,51 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 //#include <stdlib.h>
 //#include <string.h>
 #define HEIGHT 8
 #define WIDTH 8
 #define KING HEIGHT * WIDTH - 1
 
-int DecToBi (int A){
-    char C[100] = {1};
+
+
+void PrintArray(int* array, int len) {
+    for (int i = len-1; i >= 0; i--) {
+        printf("%d", array[i]);
+    }
+}
+
+//int* InitArray(int A) {
+//    int* array = new int[A/2]
+//}
+
+
+
+void Task1(int A) {
+    int B[10] = { 0 };
+    /*for (int i = 0; i < 10; i++) {
+        B[i] = 0;
+    }*/
+    static int step = -1;
+    DecToBi(A, B, step);
+    //char rslt[] = {0};
+    //binr(A);
+    PrintArray(B, 10);
+    //printf("%c", rslt);
+}
+
+int binr(int n) {
+    if (n <= 0) return;
+    int A;
+    A=binr(n / 2);
+    printf("%d", ((n % 2 == 0) ? "0" : "1"));
+}
+
+int DecToBi (int a, int* array, int step){
+    //char C[100] = {1};
     //int B[1000] = {0};
-    int i = 0;
+    //int i = 0;
 /*	while (A>=1){
 		B=(A)%2;
 
@@ -19,39 +55,28 @@ int DecToBi (int A){
 		sprintf(C, "%d", B);
    	}
 */
-    if (A>0) {
-        //B=(A/2)%2;
-        //A=A/2;
-        //B=B<<1;
-        i = i + 1;
-        C[i] = ((DecToBi(A / 2)) % 2) + '0';
-        
-        for (int j = sizeof(C); j == 0; j--) {
-            printf("%s", C[j]);
-        }
-        //sprintf(C, "%d", B);
-        return (A % 2);
+    if (a>=1) {
+        step = step + 1;
+        array[step] = ((DecToBi(floor(a / 2),array ,step)) % 2);
+        //printf("%d", a / 2);
+        return (a % 2);
     }
     
-    //B = ~B;
-    //printf("%d", B);
-  printf("%s", C);
-   // printf("%d", B);
 }
 //=============================================================
 /*Возвежение числа а в степень в рекурсивно*/
-int rise_rec(int A, int B) {
+/*int rise_rec(int A, int B) {
     if (B > 0) {
         A = A * rise_rec(A, B - 1);
         return A;
     }
-}
+}*/
 //============================================================
 /*Рекурсивно, используя свойство чётности степени (то есть, если степень, в которую нужно возвести число, чётная, 
 основание возводится в квадрат, а показатель делится на два, а если степень нечётная - результат 
 умножается на основание, а показатель уменьшается на единицу)*/
 //==============================================================
-int rise_rec2(int A, int B, int C) {
+/*int rise_rec2(int A, int B, int C) {
     int res;
     if (B >1 && B % 2 == 0) {
         A = rise_rec2(A *A, B / 2, C);
@@ -67,7 +92,7 @@ int rise_rec2(int A, int B, int C) {
     //printf("%d", A);
     return A;
  
-}
+}*/
 
 /*===============================================================================
 Реализовать нахождение количества маршрутов шахматного короля с препятствиями 
@@ -86,14 +111,10 @@ int board[HEIGHT][WIDTH];
 void printBoard() {
     for (int i = 0; i < HEIGHT; ++i)
         for (int j = 0; j < WIDTH; ++j)
-            printf("3%d", board[i][j]);
-    printf("\n");
+            printf("%d ", board[i][j]);
+    printf("%s", "\n");
      }
-int possible[][2] = {
-    {-1, 1}, {-1,0}, {-1,-1},
-    {0, -1}, {0, 1}, {-1, 0}, {1, 0},
-    {1, 1}, {1,0}, {1, -1} };
-
+int possible[][2] = {{0, 1}, {1, 0}, {1, 1}};
 
 int isPossible(int x, int y) {
     return x > 0 && x < WIDTH&& y>0 && y < HEIGHT
@@ -117,27 +138,27 @@ int kingMove(int x, int y, int move) {
         
 int main() {
     //========Задача 1
-    int A;
+    /*int A;
     scanf("%d", &A);
-    DecToBi(A);
+    Task1(A);*/
     
     //===========Задача 2.1
-    int N;
+    /*int N;
     int E;
     int res;
     scanf("%d", &N);
     scanf("%d", &E);
     res = rise_rec(N, E);
     printf("%d", res);
-
+    */
     // ========== задча2.2
-    int Z;
+    /*int Z;
      int X;
      //int res;
      scanf("%d", &Z);
      scanf("%d", &X);
      printf ("%d", rise_rec2(Z, X, Z));
-     //printf("%d", res);
+     //printf("%d", res);*/
      
      //===========задача3
     
