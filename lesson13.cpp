@@ -96,7 +96,7 @@ int matrix[n][n]= {
         {0, 0, 1, 0, 0, 0},
         {0, 1, 0, 0, 1, 0},
         {0, 0, 0, 1, 0, 1},
-        {0, 0, 1, 0, 0, 1},
+        {1, 0, 1, 0, 0, 1},
         {0, 0, 0, 1, 1, 0},
 
 };
@@ -106,7 +106,7 @@ void depthTravers(int st){
     int r;
     printf("%d", st);
     visited[st]=1;
-     for (r=0; r<n; ++r){
+    for (r=0; r<n; ++r){
         if (matrix [st][r]==1 && !visited[r]){
             depthTravers(r);
         }
@@ -137,7 +137,7 @@ void depthTraversStack(int st, Stack* stack){
     printf("%d", st);
     push(stack, st);
     for (r=0; r<n; ++r){
-       if (matrix [st][r]==1 && !searchStack(stack, r)){
+        if (matrix [st][r]==1 && !searchStack(stack, r)){
             depthTraversStack(r, stack);
         }
     }
@@ -158,7 +158,7 @@ void depthTraversStack2(int st, Stack* stack){
                 i=r;
                 r=0;
             }
-       }
+        }
         pop(stack);
         if (stack->size>=1) {
             buffer = pop(stack);
@@ -175,6 +175,8 @@ void resetArray(){
         visited[i]=0;
     }
 }
+
+
 void task13_1(){
     int firstKnote=0;
     //Stack* stack;
@@ -189,6 +191,7 @@ void task13_1(){
     init(stack2);
     printf ("\nWith Stack2: \n");
     depthTraversStack2(firstKnote, stack2);
+    printf("\n");
 }
 int countLink[2][n] = {NULL};
 
@@ -203,8 +206,6 @@ void depthTraversWithCountLink(int st, int st2) {
                 //printf("%d ", countLink[1][r]);
                 countLink[1][r]++;
                 //printf("%d ", countLink[1][r]);
-
-
             }
             if (!visited[r]) {
                 depthTraversWithCountLink(r, st2);
@@ -213,47 +214,95 @@ void depthTraversWithCountLink(int st, int st2) {
     }
 }
 
-void sortedCountLink(){
-    int temp=0;
-    int count=n;
-    for (int i=0; i<n; i++){
-        if (temp<=countLink[1][i]){
-            count--;
-            temp=countLink[1][i];
-            countLink[2][count]=i;
-       }
+void sortedCountLink() {
+    int temp = 0;
+    int count = n;
+    for (int i = 0; i <n; i++) {
+        countLink[2][i]=i;
     }
+    for (int i = 0; i <n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (countLink[1][countLink[2][i]] > countLink[1][countLink[2][j]]) {
+                temp=countLink[2][i];
+                countLink[2][i]=countLink[2][j];
+                countLink[2][j]=temp;
+
+            }
+
+        }
+
+    }
+
 }
- void printCountLink(){
+void printCountLink(){
     for (int i=0; i<n; i++){
-        if (countLink[2][i]!=NULL && countLink[1][(countLink[2][i])]>0) {
+        if (countLink[1][(countLink[2][i])]>0) {
             printf("%d", countLink[2][i]);
         }
     }
     printf ("\n");
-     for (int i=0; i<n; i++){
-         if (countLink[2][i]!=NULL&& countLink[1][(countLink[2][i])]>0) {
-            printf("%d", countLink[1][(countLink[2][i])]);
-         }
-     }
-     printf ("\n");
+    for (int j=0; j<n; j++){
+        if (countLink[1][(countLink[2][j])]>0) {
+            printf("%d", countLink[1][(countLink[2][j])]);
+        }
+    }
+    printf ("\n");
+}
+
+void resetCountLinkArray() {
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < n; j++) {
+            countLink[i][j] = {NULL};
+        }
+    }
 }
 
 void task13_2_1(int st) {
+    printf ("\nTask 13.2 -1: \n");
     resetArray();
     depthTraversWithCountLink(st, st);
     sortedCountLink();
     printCountLink();
 }
 
+void TraversWithCountLink(int st, Stack* stack){
+    int r;
+    int buffer;
+    //printf("%d", st);
+    visited[st]=1;
+    push(stack, st);
+    for (int i=0; i<n; i++){
+
+        for (r=0; r<n; ++r){
+            if (matrix [i][r]==1) {
+                //printf("%d ", r);
+                countLink[1][r]++;
+                //printf("%d ", countLink[1][r]);
+                }
+            }
+        }
+    printf("\n");
+}
+
+void task13_2_2(int st) {
+    printf ("\nTask 13.2 -2: \n");
+    Stack* stack = (Stack*)malloc(sizeof(Stack));
+    init(stack);
+    resetArray();
+    resetCountLinkArray();
+    TraversWithCountLink(st, stack);
+    sortedCountLink();
+    printCountLink();
+
+}
 
 
 int main() {
     //task 13.1==================
-//    task13_1();
+    task13_1();
     //task 13.2==================
     int st=0;
     task13_2_1(st);
-
+    task13_2_2(st);
     return 0;
 }
