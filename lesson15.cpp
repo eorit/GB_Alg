@@ -1,56 +1,67 @@
 
-/*
-ВНИМАНИЕ!
- Это заглушка для соблюдения сроков сдачи!
- В данной версии файла задачи еще не решены.
-
-Реализовать простейшую хеш-функцию. На вход функции подается строка, на выходе сумма кодов символов.
+/*Реализовать простейшую хеш-функцию. На вход функции подается строка, на выходе сумма кодов символов.
 Имеются монеты номиналом 50, 10, 5, 2, 1 коп. Напишите функцию которая минимальным количеством монет
  наберет сумму 98 коп. Для решения задачи используйте “жадный” алгоритм.*/
 
 #include <iostream>
 #include "geek.h"
 
-typedef int K;
-typedef int htIndex;
-int htSize;
-htIndex hash (int data){
-    return data % htSize;
-}
-bool insertNode(OneLinkNode** table, K data){
-    OneLinkNode *p, *p0;
-    htIndex bucket=hash (data);
-    p=(OneLinkNode*) malloc (sizeof(OneLinkNode));
-    if (p==NULL){
-        printf ("Out of memory! \n");
-        return false;
+int Hash (char* text){
+    int i=0;
+    int sum=0;
+    while (text[i]!=0){
+        sum=sum+text[i];
+        i++;
     }
-    p0=table[bucket];
-    table[bucket]=p;
-    p->next=p0;
-    p->dat=data;
-    return true;
-}
-OneLinkNode* findNode (OneLinkNode** table, K data){
-    OneLinkNode *p=table[hash(data)];
-    while (p&&!(p->dat==data))
-        p=p->next;
-    return p;
+    return sum;
 }
 
-void deleteNode (OneLinkNode** table, K data) {
-    OneLinkNode *parent, *current;
-    parent=NULL;
-    htIndex bucket=hash(data);
-    current=table[bucket];
-    while (current && !(current->dat==data)){
-        parent=current;
-        current=current->next;
+void task1 (){
+    int hash;
+    char text[]="Hello, World";
+    char text2[]="TheLordOfTheRings";
+    char text3[]="TheLordoftherings";
+    hash= Hash(text);
+    printf ("%d", hash);
+    printf("\n");
+    hash= Hash(text2);
+    printf ("%d", hash);
+    printf("\n");
+    hash= Hash(text3);
+    printf ("%d", hash);
+    printf("\n");
+}
+
+
+
+void printArr(int* arr, int n){
+    for (int i=0; i<n; i++){
+
+            printf("%d, ", arr[i]);
+
     }
+    printf("\n");
 }
-
-
+void task2(){
+    int cash=97;
+    int coin[5]={50,10, 5, 2, 1};
+    int counter [5]={0};
+    int i=0;
+    while (cash!=0){
+        if (cash-coin[i]>=0){
+            cash-=coin[i];
+            counter[i]++;
+        }
+        else{
+            i++;
+        }
+    }
+    printArr(coin, 5);
+    printArr(counter, 5);
+}
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+    task1();
+    task2();
+   return 0;
+
 }
