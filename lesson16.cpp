@@ -1,309 +1,235 @@
+
 /*
-ВНИМАНИЕ!
-Это заглушка для соблюдения сроков сдачи!
-В данной версии файла задачи еще не решены!
-
-==========================================================================================
-1 Реализовать шифрование и расшифровку цезаря с передаваемым в функцию сообщением и ключом
-2Реализовать шифрование и расшифровку перестановками с передаваемым в функцию сообщением и количеством столбцов
+Реализовать шифрование и расшифровку цезаря с передаваемым в функцию сообщением и ключом
+Реализовать шифрование и расшифровку перестановками с передаваемым в функцию сообщением и количеством столбцов
+Результатом работы должен стать один файл с кодом на языке С, содержащий функцию main и все необходимые функции.
+65-90
+97-122
 */
-#define  _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
-#include <stdlib.h>
+
+#include <iostream>
+#include <time.h>
 #include <string.h>
-#define T int
-#define true 1==1
-#define false 1!=1
+#include <stdlib.h>
+//#include "geek.h"
 
-typedef int boolean;
-
-
-typedef struct Node {
-    T dat;
-    struct Node* next;
-} Node;
-
-typedef struct NodeLst {
-    int dat;
-    struct NodeLst* next;
-} NodeLst;
-
-typedef struct {
-    Node* head;
-    int size;
-} Stack;
-
-
-void init(Stack* stack) {
-    stack->head = NULL;
-    stack->size = 0;
-}
-
-boolean push(Stack* stack, T value) {
-    Node* temp = (Node*)malloc(sizeof(Node));
-    //temp->dat = NULL;
-    //temp->next = NULL;
-    if (temp == NULL) {
-        printf("Stack overflow \n");
-        return false;
+void encryptionCesar (char* text, int key, int EncryptDecrypt){
+    int i=0;
+    int flag;
+    if (key>26){
+        key=key%26;
     }
-    temp->dat = value;
-    temp->next = stack->head;
-    stack->head = temp;
-    stack->size++;
-    return true;
-}
-
-T pop(Stack* stack) {
-    if (stack->size == 0) {
-        printf("Stack is empty\n");
-        return -1;
+    if (key<-26){
+        key=key%26;
     }
-    Node* temp = stack->head;
-    T data = stack->head->dat;
-    stack->head = stack->head->next;
-    free(temp);
-    stack->size--;
-    return data;
-}
-
-void printOneLinkCharNode(Node* n) {
-    if (n == NULL) {
-        printf("[]");
-        return;
+    if (EncryptDecrypt==-1){
+        key=-key;
     }
-    printf("[%d]", n->dat);
-}
-
-
-void printOneLinkCharStack(Stack* stack) {
-    Node* current = stack->head;
-    if (current == NULL) {
-        printOneLinkCharNode(current);
-    }
-    else {
-        do {
-            printOneLinkCharNode(current);
-            current = current->next;
-        } while (current != NULL);
-
-    }
-    printf("Size: %d \n", stack->size);
-}
-
-const int n=6;
-int matrix[n][n]= {
-        {0, 0, 1, 1, 0, 1},
-        {0, 0, 1, 0, 0, 0},
-        {0, 1, 0, 0, 1, 0},
-        {0, 0, 0, 1, 0, 1},
-        {1, 0, 1, 0, 0, 1},
-        {0, 0, 0, 1, 1, 0},
-
-};
-
-int visited[n]={0};
-void depthTravers(int st){
-    int r;
-    printf("%d", st);
-    visited[st]=1;
-    for (r=0; r<n; ++r){
-        if (matrix [st][r]==1 && !visited[r]){
-            depthTravers(r);
+    while (text[i]!='\0'){
+        if (text[i]>=65 && text[i]<=90 ){
+            flag=1;
         }
-    }
-}
-
-int searchStack(Stack* stack, int query){
-    Node* current = stack->head;
-    if (current == NULL) {
-        return 0;
-    }
-    else {
-        do {
-            if (current->dat == query) {
-                return 1;
-            } else {
-                current = current->next;
-            }
-            //current = stack->head->next;
-
-        } while (current != NULL);
-
-    }
-}
-
-void depthTraversStack(int st, Stack* stack){
-    int r;
-    printf("%d", st);
-    push(stack, st);
-    for (r=0; r<n; ++r){
-        if (matrix [st][r]==1 && !searchStack(stack, r)){
-            depthTraversStack(r, stack);
+        else if (text[i]>=97 && text[i]<=122){
+            flag=2;
         }
-    }
-}
-void depthTraversStack2(int st, Stack* stack){
-    int r;
-    int buffer;
-    printf("%d", st);
-    visited[st]=1;
-    push(stack, st);
-    for (int i=0; i<n; i++){
-        i=buffer;
-        for (r=0; r<n; ++r){
-            if (matrix [i][r]==1 && !visited[r]) {
-                printf("%d", r);
-                visited[r] = 1;
-                push(stack, r);
-                i=r;
-                r=0;
-            }
+        else {
+            flag=0;
         }
-        pop(stack);
-        if (stack->size>=1) {
-            buffer = pop(stack);
-            push(stack, buffer);
-            i=buffer;
-        }
-    }
-    pop(stack);
-}
-
-
-void resetArray(){
-    for (int i=0; i<n; ++i){
-        visited[i]=0;
-    }
-}
-
-
-void task13_1(){
-    int firstKnote=0;
-    //Stack* stack;
-    Stack* stack = (Stack*)malloc(sizeof(Stack));
-    Stack* stack2 = (Stack*)malloc(sizeof(Stack));
-    init(stack);
-    printf ("With matrix: \n");
-    depthTravers(firstKnote);
-    resetArray();
-    printf ("\nWith Stack: \n");
-    depthTraversStack(firstKnote, stack);
-    init(stack2);
-    printf ("\nWith Stack2: \n");
-    depthTraversStack2(firstKnote, stack2);
-    printf("\n");
-}
-int countLink[2][n] = {NULL};
-
-void depthTraversWithCountLink(int st, int st2) {
-    int r;
-    //printf("%d", st);
-    visited[st] = 1;
-    for (r = 0; r < n; ++r) {
-        if (matrix[st][r] == 1) {
-            if (matrix[st2][r] == 1) {
-                //printf("%d ", r);
-                //printf("%d ", countLink[1][r]);
-                countLink[1][r]++;
-                //printf("%d ", countLink[1][r]);
-            }
-            if (!visited[r]) {
-                depthTraversWithCountLink(r, st2);
-            }
-        }
-    }
-}
-
-void sortedCountLink() {
-    int temp = 0;
-    int count = n;
-    for (int i = 0; i <n; i++) {
-        countLink[2][i]=i;
-    }
-    for (int i = 0; i <n; i++) {
-        for (int j = 0; j < n; j++) {
-            if (countLink[1][countLink[2][i]] > countLink[1][countLink[2][j]]) {
-                temp=countLink[2][i];
-                countLink[2][i]=countLink[2][j];
-                countLink[2][j]=temp;
-
-            }
-
+        if ((text[i]+key)>90 && flag==1 ){
+            text[i]= key -(90-text[i])+64;
         }
 
-    }
+        else if ((text[i]+key)<65 && flag==1 ){
+            text[i]= 91 + (key-(text[i]-65));
+        }
+        else if ((text[i]+key)>122 && flag==2 ){
+            text[i]=key-(122-text[i])+96;
+        }
+        else if ((text[i]+key)<97 && flag==2 ){
 
-}
-void printCountLink(){
-    for (int i=0; i<n; i++){
-        if (countLink[1][(countLink[2][i])]>0) {
-            printf("%d", countLink[2][i]);
+            text[i]=123+(key-(text[i]-97));
         }
-    }
-    printf ("\n");
-    for (int j=0; j<n; j++){
-        if (countLink[1][(countLink[2][j])]>0) {
-            printf("%d", countLink[1][(countLink[2][j])]);
+        else if (flag==0){
+            i++;
+            continue;
         }
-    }
-    printf ("\n");
-}
-
-void resetCountLinkArray() {
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < n; j++) {
-            countLink[i][j] = {NULL};
+        else {
+            text[i]=text[i]+key;
         }
+        i++;
     }
 }
 
-void task13_2_1(int st) {
-    printf ("\nTask 13.2 -1: \n");
-    resetArray();
-    depthTraversWithCountLink(st, st);
-    sortedCountLink();
-    printCountLink();
-}
-
-void TraversWithCountLink(int st, Stack* stack){
-    int r;
-    int buffer;
-    //printf("%d", st);
-    visited[st]=1;
-    push(stack, st);
-    for (int i=0; i<n; i++){
-
-        for (r=0; r<n; ++r){
-            if (matrix [i][r]==1) {
-                //printf("%d ", r);
-                countLink[1][r]++;
-                //printf("%d ", countLink[1][r]);
-                }
-            }
-        }
+void printArr(char* text){
+    int i=0;
+    while (text[i]!='\0'){
+        printf("%c", text[i]);
+        i++;
+    }
     printf("\n");
 }
 
-void task13_2_2(int st) {
-    printf ("\nTask 13.2 -2: \n");
-    Stack* stack = (Stack*)malloc(sizeof(Stack));
-    init(stack);
-    resetArray();
-    resetCountLinkArray();
-    TraversWithCountLink(st, stack);
-    sortedCountLink();
-    printCountLink();
 
+void task1 (){
+
+    int key=1;
+    int EncryptDecrypt=0;
+
+    char text1[]="A";
+    char text2[]="z";
+    char text3[]="Hello, World";
+    char text4[]="TheLordOfTheRings";
+    char text5[]="TheLordoftherings";
+
+    printf("Message \n");
+    printf("Text1: ");
+    printArr(text1);
+    printf("Text2: ");
+    printArr(text2);
+    printf("Text3: ");
+    printArr(text3);
+    printf("Text4: ");
+    printArr(text4);
+    printf("Text5: ");
+    printArr(text5);
+
+    encryptionCesar(text1, key,EncryptDecrypt);
+    encryptionCesar(text2, key,EncryptDecrypt);
+    encryptionCesar(text3, key,EncryptDecrypt);
+    encryptionCesar(text4, key,EncryptDecrypt);
+    encryptionCesar(text5, key,EncryptDecrypt);
+
+    printf("Encryption \n");
+    printf("Text1: ");
+    printArr(text1);
+    printf("Text2: ");
+    printArr(text2);
+    printf("Text3: ");
+    printArr(text3);
+    printf("Text4: ");
+    printArr(text4);
+    printf("Text5: ");
+    printArr(text5);
+
+    EncryptDecrypt=-1;
+
+    encryptionCesar(text1, key,EncryptDecrypt);
+    encryptionCesar(text2, key,EncryptDecrypt);
+    encryptionCesar(text3, key,EncryptDecrypt);
+    encryptionCesar(text4, key,EncryptDecrypt);
+    encryptionCesar(text5, key,EncryptDecrypt);
+
+    printf("Decryption \n");
+    printf("Text1: ");
+    printArr(text1);
+    printf("Text2: ");
+    printArr(text2);
+    printf("Text3: ");
+    printArr(text3);
+    printf("Text4: ");
+    printArr(text4);
+    printf("Text5: ");
+    printArr(text5);
+
+}
+
+/*
+Реализовать шифрование и расшифровку цезаря с передаваемым в функцию сообщением и ключом
+Реализовать шифрование и расшифровку перестановками с передаваемым в функцию сообщением и количеством столбцов
+Результатом работы должен стать один файл с кодом на языке С, содержащий функцию main и все необходимые функции.
+65-90
+97-122
+*/
+
+void encryptionSwap(char* text, const int column){
+
+    int len = strlen(text);
+    if (len<column){
+        printf ("Error: ");
+        printArr(text);
+    } else{
+        int lenForEncrypt=len+(column-(len%column));
+        int row=lenForEncrypt/column;
+        //char* temp=(char*)malloc((lenForEncrypt+1)*sizeof (char));
+        char temp[1000];
+        int key = column;
+        int idx=0;
+        for (int i=len;i<lenForEncrypt; i++){
+            text[i]=120; //32;
+        }
+        text[lenForEncrypt]='\0';
+        for (int i=1; i<= key; i++) {
+            for (int j = 0; j < lenForEncrypt; j += key) {
+                temp[idx++] = text[i * j];
+
+            }
+        }
+        for (int i=0; i<lenForEncrypt; i++){
+            text[i]=temp[i];
+        }
+        //free (temp);
+    }
+}
+
+char* decryptionSwap(char* text, const int column){
+    int key=strlen(text)/column;
+    encryptionSwap(text, key);
+    return text;
+}
+void task2(){
+    char text1[] = "Abcdefghiklmn";
+    char text2[] = "z";
+    char text3[] = "Hello, World";
+    char text4[] = "TheLordOfTheRings";
+    char text5[] = "TheLordoftherings";
+    printf("Message \n");
+    printf("Text1: ");
+    printArr(text1);
+    printf("Text2: ");
+    printArr(text2);
+    printf("Text3: ");
+    printArr(text3);
+    printf("Text4: ");
+    printArr(text4);
+    printf("Text5: ");
+    printArr(text5);
+    encryptionSwap(text1, 4);
+    encryptionSwap(text2, 4);
+    encryptionSwap(text3, 4);
+    encryptionSwap(text4, 6);
+    encryptionSwap(text5, 8);
+    printf("Encrypt: \n");
+    printf("Text1: ");
+    printArr(text1);
+    printf("Text2: ");
+    printArr(text2);
+    printf("Text3: ");
+    printArr(text3);
+    printf("Text4: ");
+    printArr(text4);
+    printf("Text5: ");
+    printArr(text5);
+    encryptionSwap(text1, 4);
+    encryptionSwap(text2, 4);
+    encryptionSwap(text3, 4);
+    decryptionSwap(text4, 6);
+    decryptionSwap(text5, 8);
+    printf("Decrypt: \n");
+    printf("Text1: ");
+    printArr(text1);
+    printf("Text2: ");
+    printArr(text2);
+    printf("Text3: ");
+    printArr(text3);
+    printf("Text4: ");
+    printArr(text4);
+    printf("Text5: ");
 }
 
 
 int main() {
-    //task 13.1==================
-    task13_1();
-    //task 13.2==================
-    int st=0;
-    task13_2_1(st);
-    task13_2_2(st);
+    task1();
+    task2();
     return 0;
+
 }
