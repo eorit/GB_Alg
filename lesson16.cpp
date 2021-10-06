@@ -133,13 +133,6 @@ void task1 (){
 
 }
 
-/*
-Реализовать шифрование и расшифровку цезаря с передаваемым в функцию сообщением и ключом
-Реализовать шифрование и расшифровку перестановками с передаваемым в функцию сообщением и количеством столбцов
-Результатом работы должен стать один файл с кодом на языке С, содержащий функцию main и все необходимые функции.
-65-90
-97-122
-*/
 
 void encryptionSwap(char* text, const int column){
 
@@ -176,12 +169,15 @@ char* decryptionSwap(char* text, const int column){
     encryptionSwap(text, key);
     return text;
 }
+
 void task2(){
+    
     char text1[] = "Abcdefghiklmn";
     char text2[] = "z";
     char text3[] = "Hello, World";
     char text4[] = "TheLordOfTheRings";
     char text5[] = "TheLordoftherings";
+    
     printf("Message \n");
     printf("Text1: ");
     printArr(text1);
@@ -193,12 +189,14 @@ void task2(){
     printArr(text4);
     printf("Text5: ");
     printArr(text5);
+    
     encryptionSwap(text1, 4);
     encryptionSwap(text2, 4);
     encryptionSwap(text3, 4);
     encryptionSwap(text4, 6);
     encryptionSwap(text5, 8);
-    printf("Encrypt: \n");
+    
+    printf("Encryption: \n");
     printf("Text1: ");
     printArr(text1);
     printf("Text2: ");
@@ -209,12 +207,14 @@ void task2(){
     printArr(text4);
     printf("Text5: ");
     printArr(text5);
-    encryptionSwap(text1, 4);
-    encryptionSwap(text2, 4);
-    encryptionSwap(text3, 4);
+    
+    decryptionSwap(text1, 4);
+    decryptionSwap(text2, 4);
+    decryptionSwap(text3, 4);
     decryptionSwap(text4, 6);
     decryptionSwap(text5, 8);
-    printf("Decrypt: \n");
+    
+    printf("Decryption: \n");
     printf("Text1: ");
     printArr(text1);
     printf("Text2: ");
