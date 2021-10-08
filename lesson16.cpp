@@ -7,7 +7,7 @@
 97-122
 */
 
-#include <iostream>
+#include <stdio.h>
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
@@ -133,51 +133,85 @@ void task1 (){
 
 }
 
+/*
+Реализовать шифрование и расшифровку цезаря с передаваемым в функцию сообщением и ключом
+Реализовать шифрование и расшифровку перестановками с передаваемым в функцию сообщением и количеством столбцов
+Результатом работы должен стать один файл с кодом на языке С, содержащий функцию main и все необходимые функции.
+65-90
+97-122
+*/
 
-void encryptionSwap(char* text, const int column){
+void encryptionSwap(char* text, const int column) {
 
     int len = strlen(text);
-    if (len<column){
-        printf ("Error: ");
+    int lenForEncrypt;
+    if (len < column) {
+        printf("Error: ");
         printArr(text);
-    } else{
-        int lenForEncrypt=len+(column-(len%column));
-        int row=lenForEncrypt/column;
+    } else  {
+        if (len%column){
+            lenForEncrypt = len + (column - (len % column));
+        } else {
+            lenForEncrypt=len;
+        }//int row = lenForEncrypt / column;
         //char* temp=(char*)malloc((lenForEncrypt+1)*sizeof (char));
-        char temp[1000];
+        char temp[200]={0};
         int key = column;
-        int idx=0;
+        int idx = 0;
         for (int i=len;i<lenForEncrypt; i++){
-            text[i]=120; //32;
+            text[i]='x'; //32;
         }
-        text[lenForEncrypt]='\0';
-        for (int i=1; i<= key; i++) {
-            for (int j = 0; j < lenForEncrypt; j += key) {
-                temp[idx++] = text[i * j];
-
+        temp[lenForEncrypt] = '\0';
+        for (int i = 0; i <= key; i++) {
+            for (int j = key; j < lenForEncrypt+key; j += key) {
+                /*if (i + j > len) {
+                    temp[idx++] = 'x';
+                } else {*/
+                    temp[idx++] = text[i + j-key];
+                //}
             }
+
+            //free (temp);
         }
         for (int i=0; i<lenForEncrypt; i++){
             text[i]=temp[i];
         }
-        //free (temp);
     }
 }
 
 char* decryptionSwap(char* text, const int column){
+    if (strlen(text)/column){
     int key=strlen(text)/column;
     encryptionSwap(text, key);
-    return text;
+    return text;}
+    else{
+        printf ("Error:");
+        printArr(text);
+    }
 }
-
 void task2(){
-    
-    char text1[] = "Abcdefghiklmn";
-    char text2[] = "z";
-    char text3[] = "Hello, World";
-    char text4[] = "TheLordOfTheRings";
-    char text5[] = "TheLordoftherings";
-    
+   /* char* text1=(char*)malloc(100*sizeof (char));
+    char* text2=(char*)malloc(100*sizeof (char));
+    char* text3=(char*)malloc(100*sizeof (char));
+    char* text4=(char*)malloc(100*sizeof (char));
+    char* text5=(char*)malloc(100*sizeof (char));
+*/
+
+ 
+    char text1[100]= {"Abcdefghiklmn"};
+    char text2[10]={"z"};
+    char text3[100]={"Hello, World"};
+    char text4[100]={"TheLordOfTheRings"};
+    char text5[100]={"TheLordOfTheRings"};
+ 
+ /*
+  
+    text1 = {"Abcdefghiklmn"};
+    text2 = "z";
+    text3 = "Hello, World";
+    text4 = "TheLordOfTheRings";
+    text5 = "TheLordoftherings";
+   */
     printf("Message \n");
     printf("Text1: ");
     printArr(text1);
@@ -190,11 +224,15 @@ void task2(){
     printf("Text5: ");
     printArr(text5);
     
+    //------------------------------------
+    
     encryptionSwap(text1, 4);
     encryptionSwap(text2, 4);
     encryptionSwap(text3, 4);
     encryptionSwap(text4, 6);
     encryptionSwap(text5, 8);
+    
+    //------------------------------------
     
     printf("Encryption: \n");
     printf("Text1: ");
@@ -207,12 +245,16 @@ void task2(){
     printArr(text4);
     printf("Text5: ");
     printArr(text5);
+
+    //-------------------------------------
     
     decryptionSwap(text1, 4);
     decryptionSwap(text2, 4);
     decryptionSwap(text3, 4);
     decryptionSwap(text4, 6);
     decryptionSwap(text5, 8);
+    
+    //-----------------------------------
     
     printf("Decryption: \n");
     printf("Text1: ");
@@ -224,11 +266,14 @@ void task2(){
     printf("Text4: ");
     printArr(text4);
     printf("Text5: ");
+    printArr(text5);
 }
 
 
 int main() {
+    printf("Task1 \n");
     task1();
+    printf("Task2 \n");
     task2();
     return 0;
 
